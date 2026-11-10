@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import anthropic
+from tools import run_code
 
 load_dotenv()
 
@@ -49,6 +50,17 @@ while True:
 
     messages.append({"role": "assistant", "content":message.content})
 
+    results = []
+    for block in message.content:
+        if block.type == "tool_use":
+            out = run_code(block.input["code"], block.input.get("stdin", 0))
+            results.append({"type":"tool_result", "tool_use_id": block.id, "content":out})
+    messages.append({"role":"user", "content": results})
 
 
+
+
+for block in message.content:
+    if block.type == "text":
+        print(block.text)
 
