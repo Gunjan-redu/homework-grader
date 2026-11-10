@@ -28,7 +28,7 @@ what they did well, what to improve, and encouragement."""
 
 ASSIGNMENT = open("assignments/01_greeting/assignment.md").read()
 RUBRIC = open("assignments/01_greeting/rubrics.md").read()
-SUBMISSION = 'print(Hello Gunjan)'
+SUBMISSION = 'print("Hello Gunjan")'
 
 
 messages = [{"role": "user", "content":f"Assignment:\n{ASSIGNMENT}\n\nRubric:\n{RUBRIC}\n\nStudent submission:\n{SUBMISSION}\n\nGrade it."}]
