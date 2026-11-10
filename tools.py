@@ -20,6 +20,20 @@ def run_code(code: str, stdin: str = "") -> str:
         output += "\nERRORS:\n" + result.stderr
     return output
 
+def read_assignment(assignment_name: str) -> str:
+    try:
+        assignment = open(f"assignments/{assignment_name}/assignment.md").read()
+    except FileNotFoundError:
+        return f"ERROR: no assignment named '{assignment_name}' found"
+    return assignment
+
+def get_rubric(assignment_name: str) -> str:
+    try:
+        rubric = open(f"assignments/{assignment_name}/rubric.md").read()
+    except FileNotFoundError:
+        return f"ERROR: no rubric named '{assignment_name}' found"
+    return rubric
+
 
 
 if __name__ == "__main__":
