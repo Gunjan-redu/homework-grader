@@ -51,48 +51,52 @@ source code as well as the result. Grade strictly by the rubric. Never discourag
 mistakes are learning opportunities. Give: the score out of 10 with per-row breakdown,
 what they did well, what to improve, and encouragement."""
 
-ASSIGNMENT = open("assignments/01_greeting/assignment.md").read()
-RUBRIC = open("assignments/01_greeting/rubric.md").read()
-SUBMISSION = 'print("Hello Gunjan")'
-
-
-messages = [{"role": "user", "content":f"Grade this submission for assignment 01_greeting:\n\n{SUBMISSION}"}]
-
-
 client = anthropic.Anthropic()
+def grade(assignment_name: str, submission_path: str) -> str:
+    with open(submission_path, "r") as file:
+        submission_code = file.read()
 
-while True:
-    message = client.messages.create(
-        model="claude-haiku-5-5",
-        max_tokens=1500,
-        system= SYSTEM,
-        tools = tools,
-        messages= messages
-    )
+    messages = [{"role": "user", "content":
+        f"Grade this submission for assignment {assignment_name}:\n\n{submission_code}"}]
 
-    if message.stop_reason != "tool_use":
-        break
+    while True:
+        message = client.messages.create(
+            model="claude-haiku-5-5",
+            max_tokens=1500,
+            system= SYSTEM,
+            tools = tools,
+            messages= messages
+        )
 
-    messages.append({"role": "assistant", "content":message.content})
+        if message.stop_reason != "tool_use":
+            break
 
-    results = []
+        messages.append({"role": "assistant", "content":message.content})
+
+        results = []
+        for block in message.content:
+            if block.type == "tool_use":
+                if block.name == "run_code":
+                    out = run_code(block.input["code"], block.input.get("stdin", ""))
+                elif block.name == "read_assignment":
+                    out = read_assignment(block.input["assignment_name"])
+                elif block.name == "get_rubric":
+                    out = get_rubric(block.input["assignment_name"])
+                print(block.name, block.input)
+                results.append({"type":"tool_result", "tool_use_id": block.id, "content":out})
+        messages.append({"role":"user", "content": results})
+
+    final_text = ""
     for block in message.content:
-        if block.type == "tool_use":
-            if block.name == "run_code":
-                out = run_code(block.input["code"], block.input.get("stdin", 0))
-            elif block.name == "read_assignment":
-                out = read_assignment(block.input["assignment_name"])
-            elif block.name == "get_rubric":
-                out = get_rubric(block.input["assignment_name"])
-            print(block.name, block.input)
-            results.append({"type":"tool_result", "tool_use_id": block.id, "content":out})
-    messages.append({"role":"user", "content": results})
+        if block.type == "text":
+            final_text += block.text
+
+    return final_text
 
 
 
+if __name__ == "__main__":
+    print(grade("01_greeting", "assignments/01_greeting/submissions/migration/perfect.py"))
 
-for block in message.content:
-    if block.type == "text":
-        print(block.text)
 
 
