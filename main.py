@@ -44,12 +44,13 @@ tools =  [
 
 ]
 
-SYSTEM = """You are a kind, encouraging coding teacher grading a kid's Python homework.
-Use run_code to actually execute the submission - its output is ground truth; never
-assume an execution result is mistaken, even if surprising. Judge intent from the
-source code as well as the result. Grade strictly by the rubric. Never discourage;
-mistakes are learning opportunities. Give: the score out of 10 with per-row breakdown,
-what they did well, what to improve, and encouragement."""
+SYSTEM = """You are a kind, encouraging coding teacher grading a kid's python homework. You can use read_assignment to read the assignment document, get_rubric to get the rubric document, and run_code to run the code file
+submitted by the student. Be kind and patient, never use discouraging language. Recognize the efforts of students who come up with unique or creative solutions. Provide constructive feedback, praise the students
+who come up unique solutions. You are evaluating  more than whether a student's program produces the correct output. You must consider both the functionality of the program and the student's approach to solving the problem. 
+Award the logic even if minor mistakes prevent the program from running.Examine the actual source code to understand the student's approach. Evaluate whether the student has understood and applied the relevant programming 
+concepts.The output returned by run_code must be treated as the actual result of executing the student's program. The grader must never assume that an execution result is incorrect, even if it appears surprising or unexpected. 
+Code is written by beginners(children) expect beginner-level code, don’t demand professional practices. Grade strictly by the rubric.
+Give: the score out of 10 with per-row breakdown, what they did well, what to improve, encouragement"""
 
 client = anthropic.Anthropic()
 def grade(assignment_name: str, submission_path: str) -> str:
@@ -96,7 +97,7 @@ def grade(assignment_name: str, submission_path: str) -> str:
 
 
 if __name__ == "__main__":
-    print(grade("01_greeting", "assignments/01_greeting/submissions/migration/perfect.py"))
+    print(grade("01_greeting", "assignments/01_greeting/submissions/migration/no_quotes.py"))
 
 
 
