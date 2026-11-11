@@ -97,7 +97,10 @@ def grade(assignment_name: str, submission_path: str) -> str:
 
 
 if __name__ == "__main__":
-    print(grade("01_greeting", "assignments/01_greeting/submissions/migration/no_quotes.py"))
+    kids = ["no_quotes.py", "perfect.py", "wrong_case.py", "uses_input.py"]
+    for kid in kids:
+        print(f"Grading: \n\n{'='*60} {kid} {'='*60}\n")
+        print(grade("01_greeting", f"assignments/01_greeting/submissions/migration/{kid}"))
 
 
 
