@@ -3,3 +3,4 @@ __pycache__/
 .env
 *.pyc
 .pytest_cache/
+assignments/01_greeting/submissions/real/
